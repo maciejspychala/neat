@@ -2,8 +2,15 @@
 #include "net.h"
 
 int main() {
-    int lol = 14;
-    struct ListItem *item = new_item(&lol);
-    printf("%d\n",*(int*) item->data);
+    int a = 14, b = 932;
+    struct List *list = new_list();
+    add_data(list, &a);
+    add_data(list, &b);
+    printf("size %d\n", list->size);
+    struct ListItem *walk = list->head;
+    while (walk) {
+        printf("%d ", *(int*) walk->data);
+        walk = walk->next;
+    }
     return 0;
 }
