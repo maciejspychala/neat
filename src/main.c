@@ -2,6 +2,8 @@
 #include "net.h"
 
 int main() {
-    printf("%d\n", get_net(3));
+    int lol = 14;
+    struct ListItem *item = new_item(&lol);
+    printf("%d\n",*(int*) item->data);
     return 0;
 }
