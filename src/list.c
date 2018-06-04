@@ -1,5 +1,5 @@
+#include <stdlib.h>
 #include "list.h"
-#include "stdlib.h"
 
 struct List* new_list() {
     struct List *list = calloc(1, sizeof(struct List));

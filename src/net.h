@@ -3,6 +3,7 @@
 
 #include "list.h"
 #include "gene.h"
+#include "genome.h"
 
 int get_net(int n);
 

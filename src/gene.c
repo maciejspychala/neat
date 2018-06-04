@@ -1,9 +1,12 @@
+#include <stdlib.h>
 #include "gene.h"
-#include "stdlib.h"
 
-struct Gene* new_gene() {
+struct Gene* new_gene(uint32_t from, uint32_t to) {
     struct Gene *gene = calloc(1, sizeof(struct Gene));
     gene->id = gene_number();
+    gene->from = from;
+    gene->to = to;
+    gene->weight = 1.0;
     return gene;
 }
 

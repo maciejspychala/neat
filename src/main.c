@@ -14,9 +14,10 @@ int main() {
     }
     printf("\n2nd element: %d\n", *(int*) get_item(list, 1)->data);
     printf("if 10th elements is NULL? %d\n", get_item(list, 10) == NULL);
-    struct Gene *gene = new_gene();
-    struct Gene *another_gene = new_gene();
+    struct Gene *gene = new_gene(0, 2);
+    struct Gene *another_gene = new_gene(1, 2);
     printf("gene id: %d\n", gene->id);
     printf("another_gene id: %d\n", another_gene->id);
+    struct Genome* genome = new_genome(3);
     return 0;
 }
