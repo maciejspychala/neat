@@ -29,3 +29,14 @@ void add_item(struct List *list, struct ListItem *item) {
     }
     list->size++;
 }
+
+struct ListItem* get_item(struct List *list, int index) {
+    if (list->size < index) {
+        return NULL;
+    }
+    struct ListItem *walk = list->head;
+    while (index-- > 0) {
+        walk = walk->next;
+    }
+    return walk;
+}
