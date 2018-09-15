@@ -1,14 +1,18 @@
 #include <stdlib.h>
 #include "gene.h"
 #include "genome.h"
+#include "node.h"
 
 struct Genome* new_genome(uint32_t input_nodes) {
     struct Genome *genome = calloc(1, sizeof(struct Genome));
-    genome->genes = new_list();
+    struct Node *out_node = new_node(new_list());
+    genome->nodes = new_list();
     for (uint32_t i = 0; i < input_nodes; i++) {
-        struct Gene* gene = new_gene(i, input_nodes);
-        add_data(genome->genes, gene);
+        struct Node *in_node = new_node(NULL);
+        add_data(genome->nodes, in_node);
+        add_data(out_node->in_genes, new_gene(in_node->id, out_node->id));
     }
+    add_data(genome->nodes, out_node);
     return genome;
 }
 

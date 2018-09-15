@@ -11,5 +11,6 @@ struct Node {
 
 struct Node* new_node(struct List *in_genes);
 uint32_t node_number();
+void print_node(struct Node *node);
 
 #endif

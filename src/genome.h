@@ -5,7 +5,7 @@
 #include "list.h"
 
 struct Genome {
-    struct List *genes;
+    struct List *nodes;
 };
 
 struct Genome* new_genome(uint32_t input_nodes);

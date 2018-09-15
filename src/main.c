@@ -19,5 +19,10 @@ int main() {
     printf("gene id: %d\n", gene->id);
     printf("another_gene id: %d\n", another_gene->id);
     struct Genome* genome = new_genome(3);
+    struct ListItem *node = genome->nodes->head;
+    while (node) {
+        print_node((struct Node*) node->data);
+        node = node->next;
+    }
     return 0;
 }
