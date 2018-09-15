@@ -5,10 +5,10 @@
 
 struct Genome* new_genome(uint32_t input_nodes) {
     struct Genome *genome = calloc(1, sizeof(struct Genome));
-    struct Node *out_node = new_node(new_list());
+    struct Node *out_node = new_node(new_list(), OUT);
     genome->nodes = new_list();
     for (uint32_t i = 0; i < input_nodes; i++) {
-        struct Node *in_node = new_node(NULL);
+        struct Node *in_node = new_node(NULL, IN);
         add_data(genome->nodes, in_node);
         add_data(out_node->in_genes, new_gene(in_node->id, out_node->id));
     }

@@ -3,10 +3,11 @@
 #include "node.h"
 #include "gene.h"
 
-struct Node* new_node(struct List *in_genes) {
+struct Node* new_node(struct List *in_genes, enum node_type type) {
     struct Node *node = calloc(1, sizeof(struct Node));
     node->id = node_number();
     node->in_genes = in_genes;
+    node->type = type;
 }
 
 uint32_t node_number() {
