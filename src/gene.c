@@ -7,6 +7,7 @@ struct Gene* new_gene(uint32_t from, uint32_t to) {
     gene->from = from;
     gene->to = to;
     gene->weight = 1.0;
+    gene->enabled = true;
     return gene;
 }
 

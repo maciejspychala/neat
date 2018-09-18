@@ -20,7 +20,11 @@ void print_node(struct Node *node) {
     if (node->in_genes) {
         struct ListItem *walk = node->in_genes->head;
         while (walk) {
-            printf(" %d", ((struct Gene*)walk->data)->from);
+            struct Gene *gene = walk->data;
+            printf(" %d", gene->from);
+            if (!gene->enabled) {
+                printf("-");
+            }
             walk = walk->next;
         }
     } else {

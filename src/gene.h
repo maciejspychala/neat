@@ -2,6 +2,7 @@
 #define GENE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 struct Gene {
     uint32_t id;
@@ -9,6 +10,7 @@ struct Gene {
     uint32_t to;
     float weight;
     float value;
+    bool enabled;
 };
 
 struct Gene* new_gene(uint32_t from, uint32_t to);
