@@ -41,6 +41,13 @@ struct Node* find_node(struct Genome* genome, uint32_t node) {
     return NULL;
 }
 
-void evolve_gene(struct Genome* genome, uint32_t in_node, uint32_t out_node) {
-    return NULL;
+void evolve_gene(struct Genome* genome, uint32_t in_id, uint32_t out_id) {
+    struct Node *out = find_node(genome, out_id);
+    struct Gene *gene = find_gene(out, in_id);
+    gene->enabled = false;
+
+    struct Node *inter = new_node(new_list(), HIDDEN);
+    add_data(inter->in_genes, new_gene(in_id, inter->id));
+    add_data(out->in_genes, new_gene(inter->id, out->id));
+    add_data(genome->nodes, inter);
 }
