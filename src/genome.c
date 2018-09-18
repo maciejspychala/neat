@@ -29,3 +29,18 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
 float calculate_output(struct Genome* genome, float* input, uint32_t size) {
     return 1.0;
 }
+
+struct Node* find_node(struct Genome* genome, uint32_t node) {
+    struct ListItem *walk = genome->nodes->head;
+    while(walk) {
+        if (((struct Node*) walk->data)->id == node) {
+            return walk->data;
+        }
+        walk = walk->next;
+    }
+    return NULL;
+}
+
+void evolve_gene(struct Genome* genome, uint32_t in_node, uint32_t out_node) {
+    return NULL;
+}
