@@ -9,7 +9,6 @@ struct Gene {
     uint32_t from;
     uint32_t to;
     float weight;
-    float value;
     bool enabled;
 };
 

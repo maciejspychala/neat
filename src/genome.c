@@ -28,15 +28,51 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
 
 float calculate_output(struct Genome* genome, float* input, uint32_t size) {
     struct ListItem *walk = genome->nodes->head;
+    struct List *progress = new_list();
     while (walk) {
         struct Node *node = walk->data;
         node->visited = false;
-        node->value = 0.0;
+        // to keep recurent connection working
+        // node->value = 0.0;
         if (node->type == IN) {
             node->value = input[node->id - 1];
             node->visited = true;
         }
+        if (node->type == OUT) {
+            push_data(progress, node);
+        }
         walk = walk->next;
+    }
+
+
+    while (progress->head) {
+        struct Node *node = progress->head->data;
+
+        if (node->visited) {
+            float value = 0.0;
+            struct ListItem *walk = node->in_genes->head;
+            while (walk) {
+                struct Gene *gene = walk->data;
+                if (gene->enabled) {
+                    value += gene->weight * find_node(genome, gene->from)->value;
+                }
+                walk = walk->next;
+            }
+            node->value = value;
+            printf("saved %f as value of node %d\n", value, node->id);
+            pop_item(progress);
+        } else {
+            node->visited = true;
+            struct ListItem *walk = node->in_genes->head;
+            while (walk) {
+                struct Gene *gene = walk->data;
+                struct Node *in_node = find_node(genome, gene->from);
+                if (!in_node->visited) {
+                    push_data(progress, in_node);
+                }
+                walk = walk->next;
+            }
+        }
     }
 }
 
