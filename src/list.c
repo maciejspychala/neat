@@ -41,6 +41,16 @@ void push_item(struct List *list, struct ListItem *item) {
     list->size++;
 }
 
+struct ListItem* pop_item(struct List *list) {
+    struct ListItem* head = list->head;
+    list->head = head->next;
+    return head;
+}
+
+void* pop_data(struct List *list) {
+    return pop_item(list)->data;
+}
+
 struct ListItem* get_item(struct List *list, int index) {
     if (list->size < index) {
         return NULL;
