@@ -30,6 +30,17 @@ void add_item(struct List *list, struct ListItem *item) {
     list->size++;
 }
 
+void push_data(struct List *list, void *data) {
+    struct ListItem *item = new_item(data);
+    push_item(list, item);
+}
+
+void push_item(struct List *list, struct ListItem *item) {
+    item->next = list->head;
+    list->head = item;
+    list->size++;
+}
+
 struct ListItem* get_item(struct List *list, int index) {
     if (list->size < index) {
         return NULL;
