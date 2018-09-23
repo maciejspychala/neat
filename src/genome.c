@@ -15,7 +15,7 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
         struct Node *out = new_node(new_list(), OUT);
 
         struct ListItem *walk = genome->nodes->head;
-        while(walk) {
+        while (walk) {
             if (((struct Node*) walk->data)->type == IN) {
                 add_data(out->in_genes, new_gene(((struct Node*) walk->data)->id, out->id));
             }
@@ -27,7 +27,17 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
 }
 
 float calculate_output(struct Genome* genome, float* input, uint32_t size) {
-    return 1.0;
+    struct ListItem *walk = genome->nodes->head;
+    while (walk) {
+        struct Node *node = walk->data;
+        node->visited = false;
+        node->value = 0.0;
+        if (node->type == IN) {
+            node->value = input[node->id - 1];
+            node->visited = true;
+        }
+        walk = walk->next;
+    }
 }
 
 struct Node* find_node(struct Genome* genome, uint32_t node) {

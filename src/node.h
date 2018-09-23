@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "list.h"
 
 enum node_type {
@@ -13,6 +14,8 @@ struct Node {
     uint32_t id;
     enum node_type type;
     struct List *in_genes;
+    bool visited;
+    float value;
 };
 
 struct Node* new_node(struct List *in_genes, enum node_type type);

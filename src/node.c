@@ -8,6 +8,8 @@ struct Node* new_node(struct List *in_genes, enum node_type type) {
     node->id = node_number();
     node->in_genes = in_genes;
     node->type = type;
+    node->visited = false;
+    node->value = 0.0;
 }
 
 uint32_t node_number() {
@@ -16,7 +18,7 @@ uint32_t node_number() {
 }
 
 void print_node(struct Node *node) {
-    printf("Node %d inputs:", node->id);
+    printf("Node %d, value: %f, inputs:", node->id, node->value);
     if (node->in_genes) {
         struct ListItem *walk = node->in_genes->head;
         while (walk) {
