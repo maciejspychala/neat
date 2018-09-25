@@ -14,6 +14,7 @@ int main() {
     print_genome(genome);
     printf("\n\n");
 
+    evolve_genes_weights(genome);
     calculate_output(genome, in);
     print_genome(genome);
     return 0;
