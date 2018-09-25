@@ -28,6 +28,7 @@ void print_node(struct Node *node) {
             if (!gene->enabled) {
                 printf("-");
             }
+            printf("(%.5f)", gene->weight);
             walk = walk->next;
         }
     } else {
