@@ -26,7 +26,7 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
     return genome;
 }
 
-void calculate_output(struct Genome* genome, float* input) {
+void calculate_output(struct Genome *genome, float *input) {
     struct ListItem *walk = genome->nodes->head;
     struct List *progress = new_list();
     while (walk) {
@@ -75,7 +75,7 @@ void calculate_output(struct Genome* genome, float* input) {
     }
 }
 
-struct Node* find_node(struct Genome* genome, uint32_t node) {
+struct Node* find_node(struct Genome *genome, uint32_t node) {
     struct ListItem *walk = genome->nodes->head;
     while(walk) {
         if (((struct Node*) walk->data)->id == node) {
@@ -86,7 +86,7 @@ struct Node* find_node(struct Genome* genome, uint32_t node) {
     return NULL;
 }
 
-void evolve_gene(struct Genome* genome, uint32_t in_id, uint32_t out_id) {
+void evolve_gene(struct Genome *genome, uint32_t in_id, uint32_t out_id) {
     struct Node *out = find_node(genome, out_id);
     struct Gene *gene = find_gene(out, in_id);
     gene->enabled = false;
@@ -95,4 +95,25 @@ void evolve_gene(struct Genome* genome, uint32_t in_id, uint32_t out_id) {
     add_data(inter->in_genes, new_gene(in_id, inter->id, 1.0));
     add_data(out->in_genes, new_gene(inter->id, out->id, gene->weight));
     add_data(genome->nodes, inter);
+}
+
+void evolve_genes_weights(struct Genome *genome) {
+    struct ListItem *walk = genome->nodes->head;
+    while(walk) {
+        struct Node *node = walk->data;
+        struct ListItem *gene_walk = node->in_genes->head;
+        while (gene_walk) {
+            evolve_weight(gene_walk->data);
+            gene_walk = gene_walk->next;
+        }
+        walk = walk->next;
+    }
+}
+
+void print_genome(struct Genome *genome) {
+    struct ListItem *node = genome->nodes->head;
+    while (node) {
+        print_node((struct Node*) node->data);
+        node = node->next;
+    }
 }

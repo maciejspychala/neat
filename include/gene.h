@@ -15,5 +15,6 @@ struct Gene {
 struct Gene* new_gene(uint32_t from, uint32_t to, float weight);
 uint32_t gene_number();
 float random_weight();
+void evolve_weight(struct Gene *gene);
 
 #endif

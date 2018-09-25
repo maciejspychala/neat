@@ -20,3 +20,6 @@ float random_weight() {
     return rand() / (float) RAND_MAX;
 }
 
+void evolve_weight(struct Gene *gene) {
+    gene->weight = random_weight();
+}
