@@ -59,7 +59,7 @@ void calculate_output(struct Genome* genome, float* input) {
                 walk = walk->next;
             }
             node->value = value;
-            pop_item(progress);
+            pop_data(progress);
         } else {
             node->visited = true;
             struct ListItem *walk = node->in_genes->head;
