@@ -99,12 +99,14 @@ void evolve_gene(struct Genome *genome, uint32_t in_id, uint32_t out_id) {
 
 void evolve_genes_weights(struct Genome *genome) {
     struct ListItem *walk = genome->nodes->head;
-    while(walk) {
+    while (walk) {
         struct Node *node = walk->data;
-        struct ListItem *gene_walk = node->in_genes->head;
-        while (gene_walk) {
-            evolve_weight(gene_walk->data);
-            gene_walk = gene_walk->next;
+        if (node->type != IN) {
+            struct ListItem *gene_walk = node->in_genes->head;
+            while (gene_walk) {
+                evolve_weight(gene_walk->data);
+                gene_walk = gene_walk->next;
+            }
         }
         walk = walk->next;
     }
