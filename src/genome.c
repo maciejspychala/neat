@@ -26,7 +26,7 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
     return genome;
 }
 
-float calculate_output(struct Genome* genome, float* input, uint32_t size) {
+void calculate_output(struct Genome* genome, float* input) {
     struct ListItem *walk = genome->nodes->head;
     struct List *progress = new_list();
     while (walk) {

@@ -10,6 +10,7 @@ struct Node* new_node(struct List *in_genes, enum node_type type) {
     node->type = type;
     node->visited = false;
     node->value = 0.0;
+    return node;
 }
 
 uint32_t node_number() {

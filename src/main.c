@@ -10,14 +10,14 @@ int main() {
     add_data(find_node(genome, 5)->in_genes, new_gene(1, 5, random_weight()));
     add_data(find_node(genome, 5)->in_genes, new_gene(4, 5, random_weight()));
     struct ListItem *node = genome->nodes->head;
-    float in[3] = { 1, 0.5, 0.2 };
-    calculate_output(genome, in, 3);
+    float in[] = { 1, 0.5, 0.2 };
+    calculate_output(genome, in);
     while (node) {
         print_node((struct Node*) node->data);
         node = node->next;
     }
     printf("\n\n");
-    calculate_output(genome, in, 3);
+    calculate_output(genome, in);
     node = genome->nodes->head;
     while (node) {
         print_node((struct Node*) node->data);
