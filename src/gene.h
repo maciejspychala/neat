@@ -12,7 +12,8 @@ struct Gene {
     bool enabled;
 };
 
-struct Gene* new_gene(uint32_t from, uint32_t to);
+struct Gene* new_gene(uint32_t from, uint32_t to, float weight);
 uint32_t gene_number();
+float random_weight();
 
 #endif

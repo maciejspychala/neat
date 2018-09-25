@@ -17,7 +17,7 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
         struct ListItem *walk = genome->nodes->head;
         while (walk) {
             if (((struct Node*) walk->data)->type == IN) {
-                add_data(out->in_genes, new_gene(((struct Node*) walk->data)->id, out->id));
+                add_data(out->in_genes, new_gene(((struct Node*) walk->data)->id, out->id, random_weight()));
             }
             walk = walk->next;
         }
@@ -59,7 +59,6 @@ float calculate_output(struct Genome* genome, float* input, uint32_t size) {
                 walk = walk->next;
             }
             node->value = value;
-            printf("saved %f as value of node %d\n", value, node->id);
             pop_item(progress);
         } else {
             node->visited = true;
@@ -93,7 +92,7 @@ void evolve_gene(struct Genome* genome, uint32_t in_id, uint32_t out_id) {
     gene->enabled = false;
 
     struct Node *inter = new_node(new_list(), HIDDEN);
-    add_data(inter->in_genes, new_gene(in_id, inter->id));
-    add_data(out->in_genes, new_gene(inter->id, out->id));
+    add_data(inter->in_genes, new_gene(in_id, inter->id, 1.0));
+    add_data(out->in_genes, new_gene(inter->id, out->id, gene->weight));
     add_data(genome->nodes, inter);
 }
