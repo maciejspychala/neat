@@ -1,13 +1,14 @@
 #include <stdlib.h>
 #include "gene.h"
 
-struct Gene* new_gene(uint32_t from, uint32_t to, float weight) {
+struct Gene* new_gene(struct Genome *genome, uint32_t from, uint32_t to, float weight) {
     struct Gene *gene = calloc(1, sizeof(struct Gene));
     gene->id = gene_number();
     gene->from = from;
     gene->to = to;
     gene->weight = weight;
     gene->enabled = true;
+    add_data(genome->global_genes, gene);
     return gene;
 }
 

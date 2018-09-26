@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "genome.h"
 
 struct Gene {
     uint32_t id;
@@ -12,7 +13,7 @@ struct Gene {
     bool enabled;
 };
 
-struct Gene* new_gene(uint32_t from, uint32_t to, float weight);
+struct Gene* new_gene(struct Genome *genome, uint32_t from, uint32_t to, float weight);
 uint32_t gene_number();
 float random_weight();
 void evolve_weight(struct Gene *gene);
