@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "list.h"
 
 struct List* new_list() {
@@ -49,4 +50,17 @@ struct ListItem* get_data(struct List *list, int index) {
         walk = walk->next;
     }
     return walk->data;
+}
+
+struct List* copy_list(struct List *list, size_t struct_size) {
+    struct List *new = new_list();
+    if(!list) return NULL;
+    struct ListItem *walk = list->head;
+    while (walk) {
+        void *data = calloc(1, struct_size);
+        memcpy(data, walk->data, struct_size);
+        add_data(new, data);
+        walk = walk->next;
+    }
+    return new;
 }

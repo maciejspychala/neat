@@ -1,6 +1,8 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <stdlib.h>
+
 struct List {
     struct ListItem *head;
     int size;
@@ -17,5 +19,6 @@ void add_data(struct List *list, void *data);
 void push_data(struct List *list, void *data);
 void* pop_data(struct List *list);
 struct ListItem* get_data(struct List *list, int index);
+struct List* copy_list(struct List *list, size_t struct_size);
 
 #endif

@@ -166,3 +166,20 @@ void add_gene(struct Genome *genome, uint32_t in, uint32_t out, float weight) {
         add_data(out_node->in_genes, gene);
     }
 }
+
+struct Genome* copy_genome(struct Genome *genome) {
+    struct Genome *new = calloc(1, sizeof(struct Genome));
+    new->global_genes = genome->global_genes;
+    new->nodes = new_list();
+    struct ListItem *walk = genome->nodes->head;
+    while (walk) {
+        struct Node *node = walk->data;
+        struct Node *new_node = calloc(1, sizeof(struct Node));
+        new_node->id = node->id;
+        new_node->type = node->type;
+        new_node->in_genes = copy_list(node->in_genes, sizeof(struct Gene));
+        add_data(new->nodes, new_node);
+        walk = walk->next;
+    }
+    return new;
+}

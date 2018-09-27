@@ -15,8 +15,14 @@ int main() {
     print_genome(genome);
     printf("\n\n");
 
+    struct Genome *new_genome = copy_genome(genome);
     evolve_genes_weights(genome);
     calculate_output(genome, in);
     print_genome(genome);
+    printf("\n\n");
+
+    calculate_output(new_genome, in);
+    print_genome(new_genome);
+    printf("\n\n");
     return 0;
 }

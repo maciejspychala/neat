@@ -16,5 +16,6 @@ void evolve_gene(struct Genome *genome, uint32_t in_id, uint32_t out_id);
 void evolve_genes_weights(struct Genome *genome);
 void print_genome(struct Genome *genome);
 void add_gene(struct Genome *genome, uint32_t in, uint32_t out, float weight);
+struct Genome* copy_genome(struct Genome *genome);
 
 #endif
