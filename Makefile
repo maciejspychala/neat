@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Wextra -Werror -std=c11 -I./include/
+CFLAGS=-Wall -Wextra -Werror -std=c11 -I./include/ -lm
 CC=gcc $(CFLAGS)
 
 

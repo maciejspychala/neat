@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 #include "gene.h"
 #include "genome.h"
 #include "node.h"
@@ -33,7 +34,11 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
     return genome;
 }
 
-void calculate_output(struct Genome *genome, float *input) {
+double sigmoid(double x) {
+    return 2.0 / (1.0 + exp(-4.9 * x)) - 1;
+}
+
+void calculate_output(struct Genome *genome, double *input) {
     struct ListItem *walk = genome->nodes->head;
     struct List *progress = new_list();
     while (walk) {
@@ -56,7 +61,7 @@ void calculate_output(struct Genome *genome, float *input) {
         struct Node *node = progress->head->data;
 
         if (node->visited) {
-            float value = 0.0;
+            double value = 0.0;
             struct ListItem *walk = node->in_genes->head;
             while (walk) {
                 struct Gene *gene = walk->data;
@@ -148,7 +153,7 @@ struct Gene* global_gene_exists(struct Genome *genome, uint32_t in, uint32_t out
     return NULL;
 }
 
-void add_gene(struct Genome *genome, uint32_t in, uint32_t out, float weight) {
+void add_gene(struct Genome *genome, uint32_t in, uint32_t out, double weight) {
     struct Node *out_node = find_or_create_node(genome, out);
     if (find_gene(out_node, in)) {
         return;

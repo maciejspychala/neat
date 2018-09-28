@@ -9,13 +9,13 @@ struct Gene {
     uint32_t id;
     uint32_t from;
     uint32_t to;
-    float weight;
+    double weight;
     bool enabled;
 };
 
-struct Gene* new_gene(struct Genome *genome, uint32_t from, uint32_t to, float weight);
+struct Gene* new_gene(struct Genome *genome, uint32_t from, uint32_t to, double weight);
 uint32_t gene_number();
-float random_weight();
+double random_weight();
 void evolve_weight(struct Gene *gene);
 
 #endif

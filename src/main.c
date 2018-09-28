@@ -10,7 +10,7 @@ int main() {
     add_data(find_node(genome, 5)->in_genes, new_gene(genome, 1, 5, random_weight()));
     add_data(find_node(genome, 5)->in_genes, new_gene(genome, 4, 5, random_weight()));
     add_gene(genome, 4, 5, 0.1);
-    float in[] = { 1, 0.5, 0.2 };
+    double in[] = { 1, 0.5, 0.2 };
     calculate_output(genome, in);
     print_genome(genome);
     printf("\n\n");

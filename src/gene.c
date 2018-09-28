@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "gene.h"
 
-struct Gene* new_gene(struct Genome *genome, uint32_t from, uint32_t to, float weight) {
+struct Gene* new_gene(struct Genome *genome, uint32_t from, uint32_t to, double weight) {
     struct Gene *gene = calloc(1, sizeof(struct Gene));
     gene->id = gene_number();
     gene->from = from;
@@ -17,8 +17,8 @@ uint32_t gene_number() {
     return ++num;
 }
 
-float random_weight() {
-    return rand() / (float) RAND_MAX;
+double random_weight() {
+    return rand() / (double) RAND_MAX;
 }
 
 void evolve_weight(struct Gene *gene) {

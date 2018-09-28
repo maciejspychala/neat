@@ -15,7 +15,7 @@ struct Node {
     enum node_type type;
     struct List *in_genes;
     bool visited;
-    float value;
+    double value;
 };
 
 struct Node* new_node(struct List *in_genes, enum node_type type);
