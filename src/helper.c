@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "helper.h"
 
-uint32_t line_count(char* filename) {
+uint32_t line_count(char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
         fprintf(stderr, "cannot open file %s\n", filename);
@@ -19,7 +19,7 @@ uint32_t line_count(char* filename) {
     return line_count;
 }
 
-uint32_t word_count(char* filename) {
+uint32_t word_count(char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
         fprintf(stderr, "cannot open file %s\n", filename);
@@ -45,3 +45,18 @@ uint32_t word_count(char* filename) {
     return word_count;
 }
 
+double** read_data(char *filename, uint32_t rows, uint32_t cols) {
+    FILE *file = fopen(filename, "r");
+    if (!file) {
+        fprintf(stderr, "cannot open file %s\n", filename);
+    }
+
+    double **data = calloc(rows, sizeof(double*));
+    for (uint32_t i = 0; i < rows; i++) {
+        data[i] = calloc(cols, sizeof(double));
+        for (uint32_t j = 0; j < cols; j++) {
+            fscanf(file, "%lf", &data[i][j]);
+        }
+    }
+    return data;
+}

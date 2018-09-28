@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
     uint32_t inputs = word_count(argv[1]);
     uint32_t outputs = word_count(argv[2]);
     printf("test lines: %d\n", lines);
+    double **data = read_data(argv[1], lines, inputs);
     struct Genome *genome = new_genome(inputs, outputs);
     print_genome(genome);
     return 0;
