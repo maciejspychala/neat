@@ -248,3 +248,37 @@ double* collect_output(struct Genome *genome, uint32_t outputs) {
     }
     return out;
 }
+
+double distance(struct Genome *g1, struct Genome *g2) {
+    if (g1->nodes->size < g2->nodes->size) {
+        struct Genome *tmp = g2;
+        g2 = g1;
+        g1 = tmp;
+    }
+    struct ListItem *walk = g1->nodes->head;
+    double disjonts = 0;
+    double weight_dif = 0;
+    double matching_genes = 0;
+
+    while (walk) {
+        struct Node *n1 = walk->data;
+        struct Node *n2 = find_node(g2, n1->id);
+
+        struct ListItem *gene_walk = n1->in_genes->head;
+        while (gene_walk) {
+            struct Gene *g1 = gene_walk->data;
+            struct Gene *g2 = n2 ? find_gene(n2, g1->from) : NULL;
+
+            if (g2)  {
+                matching_genes++;
+                weight_dif += fabs(g1->weight - g2->weight);
+            } else {
+                disjonts++;
+            }
+            gene_walk = gene_walk->next;
+        }
+        walk = walk->next;
+    }
+
+    return (disjonts / g1->nodes->size) + (0.4 * weight_dif / matching_genes);
+}

@@ -20,5 +20,6 @@ void add_gene(struct Genome *genome, uint32_t in, uint32_t out, double weight);
 struct Genome* copy_genome(struct Genome *genome);
 struct Genome* crossover(struct Genome *better, struct Genome *worse);
 double* collect_output(struct Genome *genome, uint32_t cols);
+double distance(struct Genome *g1, struct Genome *g2);
 
 #endif

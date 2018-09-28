@@ -17,6 +17,12 @@ int main(int argc, char **argv) {
     double **train_y = read_data(argv[2], lines, outputs);
     struct Genome *genome = new_genome(inputs, outputs);
     double score = test_genome(genome, lines, inputs, outputs, train_x, train_y);
+
+    struct Genome *copy = copy_genome(genome);
+    printf("diff %lf\n", distance(genome, copy));
+    evolve_genes_weights(copy);
+    printf("diff %lf\n", distance(genome, copy));
+
     printf("score: %lf\n", score);
     return 0;
 }
