@@ -54,7 +54,6 @@ struct ListItem* get_data(struct List *list, int index) {
 
 struct List* copy_list(struct List *list, size_t struct_size) {
     struct List *new = new_list();
-    if(!list) return NULL;
     struct ListItem *walk = list->head;
     while (walk) {
         void *data = calloc(1, struct_size);

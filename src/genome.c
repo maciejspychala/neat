@@ -15,7 +15,7 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
     genome->global_genes = global_genes;
 
     for (uint32_t i = 0; i < input_nodes; i++) {
-        add_data(genome->nodes, new_node(NULL, IN));
+        add_data(genome->nodes, new_node(new_list(), IN));
     }
 
     for (uint32_t i = 0; i < output_nodes; i++) {
