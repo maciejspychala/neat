@@ -16,6 +16,7 @@ int main(int argc, char **argv) {
     double **train_x = read_data(argv[1], lines, inputs);
     double **train_y = read_data(argv[2], lines, outputs);
     struct Genome *genome = new_genome(inputs, outputs);
-    test_genome(genome, lines, inputs, outputs, train_x, train_y);
+    double score = test_genome(genome, lines, inputs, outputs, train_x, train_y);
+    printf("score: %lf\n", score);
     return 0;
 }
