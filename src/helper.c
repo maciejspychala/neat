@@ -60,3 +60,9 @@ double** read_data(char *filename, uint32_t rows, uint32_t cols) {
     }
     return data;
 }
+
+void print_double_arr(double *arr, uint32_t size) {
+    for (uint32_t i = 0; i < size; i++) {
+        printf("%lf ", arr[i]);
+    }
+}
