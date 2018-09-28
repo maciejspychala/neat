@@ -19,13 +19,16 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
         add_data(genome->nodes, new_node(new_list(), IN));
     }
 
+    add_data(genome->nodes, new_node(new_list(), BIAS));
+
     for (uint32_t i = 0; i < output_nodes; i++) {
         struct Node *out = new_node(new_list(), OUT);
 
         struct ListItem *walk = genome->nodes->head;
         while (walk) {
-            if (((struct Node*) walk->data)->type == IN) {
-                add_data(out->in_genes, new_gene(genome, ((struct Node*) walk->data)->id, out->id, random_weight()));
+            struct Node *node = walk->data;
+            if (node->type == IN || node->type == BIAS) {
+                add_data(out->in_genes, new_gene(genome, node->id, out->id, random_weight()));
             }
             walk = walk->next;
         }
@@ -49,8 +52,10 @@ void calculate_output(struct Genome *genome, double *input) {
         if (node->type == IN) {
             node->value = input[node->id - 1];
             node->visited = true;
-        }
-        if (node->type == OUT) {
+        } else if (node->type == BIAS) {
+            node->value = 1;
+            node->visited = true;
+        } else if (node->type == OUT) {
             push_data(progress, node);
         }
         walk = walk->next;
@@ -70,7 +75,7 @@ void calculate_output(struct Genome *genome, double *input) {
                 }
                 walk = walk->next;
             }
-            node->value = value;
+            node->value = sigmoid(value);
             pop_data(progress);
         } else {
             node->visited = true;

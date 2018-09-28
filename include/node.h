@@ -7,6 +7,7 @@
 
 enum node_type {
     IN,
+    BIAS,
     HIDDEN,
     OUT
 };
