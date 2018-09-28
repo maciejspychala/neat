@@ -6,6 +6,6 @@
 #include "genome.h"
 #include "node.h"
 
-int get_net(int n);
+double test_genome(struct Genome* genome, uint32_t rows, double **x, uint32_t cols, double **y);
 
 #endif
