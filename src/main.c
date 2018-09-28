@@ -24,5 +24,10 @@ int main() {
     calculate_output(new_genome, in);
     print_genome(new_genome);
     printf("\n\n");
+
+
+    struct Genome *child = crossover(genome, new_genome);
+    calculate_output(child, in);
+    print_genome(child);
     return 0;
 }

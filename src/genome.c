@@ -183,3 +183,43 @@ struct Genome* copy_genome(struct Genome *genome) {
     }
     return new;
 }
+
+struct Genome* crossover(struct Genome *better, struct Genome *worse) {
+    struct Genome *new = calloc(1, sizeof(struct Genome));
+    new->nodes = new_list();
+    new->global_genes = better->global_genes;
+
+    if (better->fitness < worse->fitness) {
+        struct Genome *tmp = worse;
+        worse = better;
+        better = tmp;
+    }
+
+    struct ListItem *walk = better->nodes->head;
+
+    while (walk) {
+        struct Node *better_node = walk->data;
+        struct Node *worse_node = find_node(worse, better_node->id);
+        struct Node *new_node = new_node_with_id(better_node->id);
+        new_node->type = better_node->type;
+
+        struct ListItem *gene_walk = better_node->in_genes->head;
+        while (gene_walk) {
+            struct Gene *better_gene = gene_walk->data;
+            struct Gene *worse_gene = worse_node ? find_gene(worse_node, better_gene->from) : NULL;
+            struct Gene *new_gene = calloc(1, sizeof(struct Gene));
+
+            if (worse_gene && rand() % 2)  {
+                *new_gene = *worse_gene;
+            } else {
+                *new_gene = *better_gene;
+            }
+            add_data(new_node->in_genes, new_gene);
+            gene_walk = gene_walk->next;
+        }
+        add_data(new->nodes, new_node);
+        walk = walk->next;
+    }
+
+    return new;
+}
