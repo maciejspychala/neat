@@ -2,29 +2,19 @@
 #include <stdlib.h>
 #include <time.h>
 #include "net.h"
+#include "helper.h"
 
-int main() {
+int main(int argc, char **argv) {
     srand(time(0));
-    struct Genome *genome = new_genome(3, 1);
-    evolve_gene(genome, 2, 5);
-    double in[] = { 1, 0.5, 0.2 };
-    calculate_output(genome, in);
+    if (argc < 3) {
+        printf("usage: ./neat in_values out_values\n");
+        return 0;
+    }
+    uint32_t lines = line_count(argv[1]);
+    uint32_t inputs = word_count(argv[1]);
+    uint32_t outputs = word_count(argv[2]);
+    printf("test lines: %d\n", lines);
+    struct Genome *genome = new_genome(inputs, outputs);
     print_genome(genome);
-    printf("\n\n");
-
-    struct Genome *new_genome = copy_genome(genome);
-    evolve_genes_weights(genome);
-    calculate_output(genome, in);
-    print_genome(genome);
-    printf("\n\n");
-
-    calculate_output(new_genome, in);
-    print_genome(new_genome);
-    printf("\n\n");
-
-
-    struct Genome *child = crossover(genome, new_genome);
-    calculate_output(child, in);
-    print_genome(child);
     return 0;
 }

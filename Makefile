@@ -4,7 +4,7 @@ CC=gcc $(CFLAGS)
 
 all: neat
 
-neat: net.o src/main.c
+neat: net.o helper.o src/main.c
 	$(CC) -o neat src/main.c *.o
 
 net.o: list.o gene.o genome.o node.o src/net.c
@@ -22,6 +22,12 @@ gene.o: src/gene.c
 node.o: src/node.c
 	$(CC) -c src/node.c
 
+helper.o: src/helper.c
+	$(CC) -c src/helper.c
+
 clean:
 	rm *.o
 	rm neat
+
+run:
+	./neat ./test/xor.in ./test/xor.out ./test/xor.test
