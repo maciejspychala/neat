@@ -233,3 +233,18 @@ struct Genome* crossover(struct Genome *better, struct Genome *worse) {
 
     return new;
 }
+
+double* collect_output(struct Genome *genome, uint32_t cols) {
+    struct ListItem *walk = genome->nodes->head;
+    double *out = calloc(cols, sizeof(double));
+    int collected = 0;
+    while (walk) {
+        struct Node *node = walk->data;
+        if (node->type == OUT) {
+            out[collected] = node->value;
+            collected++;
+        }
+        walk = walk->next;
+    }
+    return out;
+}
