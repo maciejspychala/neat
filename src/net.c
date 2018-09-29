@@ -18,6 +18,30 @@ bool same_species(struct Species *species, struct Genome *genome) {
     return dist < 1.2;
 }
 
+struct Net* new_net() {
+    struct Net *net = calloc(1, sizeof(struct Net));
+    net->species = new_list();
+    return net;
+}
+
+void add_genome(struct Net *net, struct Genome *genome) {
+    struct ListItem *walk = net->species->head;
+    bool added = false;
+    while (walk) {
+        struct Species *species = walk->data;
+        if (same_species(species, genome)) {
+            add_data(species->genomes, genome);
+            added = true;
+            break;
+        }
+        walk = walk->next;
+    }
+    if (!added) {
+        struct Species *species = new_species(genome);
+        add_data(net->species, species);
+    }
+}
+
 double test_genome(struct Genome* genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
     double score = 0;
     for (uint32_t i = 0; i < rows; i++) {

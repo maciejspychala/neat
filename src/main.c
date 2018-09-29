@@ -25,8 +25,8 @@ int main(int argc, char **argv) {
 
     printf("score: %lf\n", score);
 
-    struct Species *species = new_species(genome);
-    printf("same species? %d\n", same_species(species, copy));
+    struct Net *net = new_net();
+    add_genome(net, genome);
 
     return 0;
 }
