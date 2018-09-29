@@ -24,5 +24,9 @@ int main(int argc, char **argv) {
     printf("diff %lf\n", distance(genome, copy));
 
     printf("score: %lf\n", score);
+
+    struct Species *species = new_species(genome);
+    printf("same species? %d\n", same_species(species, copy));
+
     return 0;
 }
