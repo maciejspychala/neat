@@ -52,6 +52,20 @@ struct ListItem* get_data(struct List *list, int index) {
     return walk->data;
 }
 
+void* fold(struct List *list, void* (*compare)(void *a, void *b)) {
+    if (!list->head) {
+        return NULL;
+    }
+    void *chosen = list->head->data;
+    struct ListItem *walk = list->head;
+    while (walk) {
+        void *tmp = walk->data;
+        chosen = compare(chosen, tmp);
+        walk = walk->next;
+    }
+    return chosen;
+}
+
 struct List* copy_list(struct List *list, size_t struct_size) {
     struct List *new = new_list();
     struct ListItem *walk = list->head;

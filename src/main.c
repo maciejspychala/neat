@@ -4,6 +4,16 @@
 #include "net.h"
 #include "helper.h"
 
+void* cmp(void *a, void* b) {
+    struct Genome *g1 = a;
+    struct Genome *g2 = b;
+
+    if (g1->fitness < g2->fitness) {
+        return g2;
+    }
+    return g1;
+}
+
 int main(int argc, char **argv) {
     srand(time(0));
     if (argc < 3) {
@@ -21,8 +31,9 @@ int main(int argc, char **argv) {
     printf("%d\n", ((struct Species*) net->species->head->data)->genomes->size);
 
     test_net(net, lines, inputs, outputs, train_x, train_y);
-
-
-
+    struct Genome *lol = fold(((struct Species*)net->species->head->data)->genomes, cmp);
+    printf("%f\n", lol->fitness);
+    print_genome(lol);
+    test_genome(lol, lines, inputs, outputs, train_x, train_y);
     return 0;
 }
