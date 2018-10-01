@@ -60,7 +60,7 @@ double test_genome(struct Genome* genome, uint32_t rows, uint32_t inputs, uint32
             score += (out[j] - y[i][j]) * (out[j] - y[i][j]);
         }
     }
-    score = 1 - score;
+    score = 1.0 / (score + 0.0000000001);
     genome->fitness = score;
     return score;
 }
