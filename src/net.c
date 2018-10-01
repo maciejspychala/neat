@@ -4,6 +4,7 @@
 #include "net.h"
 #include "helper.h"
 #define DEBUG 1
+#define GENOME_COUNT 50
 
 struct Species* new_species(struct Genome *genome) {
     struct Species *species = calloc(1, sizeof(struct Species));
@@ -41,6 +42,16 @@ void add_genome(struct Net *net, struct Genome *genome) {
         add_data(net->species, species);
     }
 }
+
+void populate(struct Net *net, struct Genome *genome) {
+    for (int i = 0; i < GENOME_COUNT - 1; i++) {
+        struct Genome *new_genome = copy_genome(genome);
+        evolve_genes_weights(new_genome);
+        add_genome(net, new_genome);
+    }
+    add_genome(net, genome);
+}
+
 
 double test_genome(struct Genome* genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
     double score = 0;
