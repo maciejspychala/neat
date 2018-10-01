@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "net.h"
 #include "helper.h"
-#define DEBUG 1
+#define DEBUG 0
 #define GENOME_COUNT 50
 
 struct Species* new_species(struct Genome *genome) {
@@ -75,15 +75,15 @@ double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32
     for (uint32_t i = 0; i < rows; i++) {
         calculate_output(genome, x[i]);
         double *out = collect_output(genome, outputs);
-#ifdef DEBUG
-        printf("for (");
-        print_double_arr(x[i], inputs);
-        printf(") received (");
-        print_double_arr(out, outputs);
-        printf(") should be (");
-        print_double_arr(y[i], outputs);
-        printf(")\n");
-#endif
+        if (DEBUG) {
+            printf("for (");
+            print_double_arr(x[i], inputs);
+            printf(") received (");
+            print_double_arr(out, outputs);
+            printf(") should be (");
+            print_double_arr(y[i], outputs);
+            printf(")\n");
+        }
         for (uint32_t j = 0; j < outputs; j++) {
             score += (out[j] - y[i][j]) * (out[j] - y[i][j]);
         }
