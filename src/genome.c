@@ -282,3 +282,17 @@ double distance(struct Genome *g1, struct Genome *g2) {
 
     return (disjonts / g1->nodes->size) + (0.4 * weight_dif / matching_genes);
 }
+
+void destroy_genome(struct Genome *genome) {
+    struct ListItem *walk = genome->nodes->head;
+    while (walk) {
+        struct Node *node = walk->data;
+        destroy_list(node->in_genes);
+        free(walk->data);
+        struct ListItem *tmp = walk;
+        walk = walk->next;
+        free(tmp);
+    }
+    free(genome);
+    genome = NULL;
+}

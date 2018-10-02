@@ -100,3 +100,14 @@ void sort_list(struct List *list, int (*compare)(void *a, void *b)) {
         }
     } while (touched);
 }
+
+void destroy_list(struct List *list) {
+    struct ListItem *walk = list->head;
+    while (walk) {
+        free(walk->data);
+        struct ListItem *tmp = walk;
+        walk = walk->next;
+        free(tmp);
+    }
+    list = NULL;
+}
