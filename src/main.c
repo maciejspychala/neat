@@ -21,9 +21,12 @@ int main(int argc, char **argv) {
     printf("%d\n", ((struct Species*) net->species->head->data)->genomes->size);
 
     test_net(net, lines, inputs, outputs, train_x, train_y);
-    struct Genome *lol = fold(((struct Species*)net->species->head->data)->genomes, cmp);
-    printf("%f\n", lol->fitness);
-    print_genome(lol);
-    test_genome(lol, lines, inputs, outputs, train_x, train_y);
+    struct Species *s = net->species->head->data;
+    struct ListItem *walk = s->genomes->head;
+    while (walk) {
+        struct Genome *g = walk->data;
+        printf("%f\n", g->fitness);
+        walk = walk->next;
+    }
     return 0;
 }

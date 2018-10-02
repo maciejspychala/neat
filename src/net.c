@@ -4,7 +4,7 @@
 #include "net.h"
 #include "helper.h"
 #define DEBUG 0
-#define GENOME_COUNT 50
+#define GENOME_COUNT 20
 
 struct Species* new_species(struct Genome *genome) {
     struct Species *species = calloc(1, sizeof(struct Species));
@@ -79,6 +79,7 @@ void test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs,
     while (walk) {
         struct Species *species = walk->data;
         test_species(species, rows, inputs, outputs, x, y);
+        sort_list(species->genomes, cmp_fitness);
         walk = walk->next;
     }
 }
