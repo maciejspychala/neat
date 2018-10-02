@@ -106,3 +106,19 @@ double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32
     genome->fitness = score;
     return score;
 }
+
+void clean_species(struct Species *species, uint32_t left) {
+    struct ListItem *walk = get_item(species->genomes, left - 1);
+    if (walk) {
+        struct ListItem *tmp = walk;
+        walk = walk->next;
+        tmp->next = NULL;
+        species->genomes->size = left;
+    }
+    while (walk) {
+        destroy_genome(walk->data);
+        struct ListItem *tmp = walk;
+        walk = walk->next;
+        free(tmp);
+    }
+}

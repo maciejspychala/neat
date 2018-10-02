@@ -42,7 +42,7 @@ void* pop_data(struct List *list) {
     return head->data;
 }
 
-struct ListItem* get_data(struct List *list, int index) {
+struct ListItem* get_item(struct List *list, int index) {
     if (list->size < index) {
         return NULL;
     }
@@ -50,7 +50,7 @@ struct ListItem* get_data(struct List *list, int index) {
     while (index-- > 0) {
         walk = walk->next;
     }
-    return walk->data;
+    return walk;
 }
 
 void* fold(struct List *list, int (*compare)(void *a, void *b)) {
