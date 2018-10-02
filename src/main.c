@@ -18,24 +18,10 @@ int main(int argc, char **argv) {
 
     struct Net *net = new_net();
     populate(net, new_genome(inputs, outputs));
-    printf("%d\n", ((struct Species*) net->species->head->data)->genomes->size);
 
-    test_net(net, lines, inputs, outputs, train_x, train_y);
-    struct Species *s = net->species->head->data;
-    struct ListItem *walk = s->genomes->head;
-    while (walk) {
-        struct Genome *g = walk->data;
-        printf("%f\n", g->fitness);
-        walk = walk->next;
-    }
-    printf("\n\n\n");
-    clean_species(s, 5);
-    test_net(net, lines, inputs, outputs, train_x, train_y);
-    walk = s->genomes->head;
-    while (walk) {
-        struct Genome *g = walk->data;
-        printf("%f\n", g->fitness);
-        walk = walk->next;
+    for (int i = 0; i < 200; i++) {
+        test_net(net, lines, inputs, outputs, train_x, train_y);
+        new_epoch(net);
     }
     return 0;
 }

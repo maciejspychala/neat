@@ -307,19 +307,17 @@ struct Genome* child_add_connection(struct Genome *genome) {
     uint32_t from = rand() % genome->nodes->size;
     uint32_t to = (rand() % (genome->nodes->size - genome->input_nodes - 1)) +
         genome->input_nodes + 1;
-    struct Node *out_node = find_node(genome, to);
-    while (out_node->type == IN || out_node->type == BIAS) {
-        to++;
-    }
+    struct Node *in_node = get_item(genome->nodes, from)->data;
+    struct Node *out_node = get_item(genome->nodes, to)->data;
     struct Genome *new = copy_genome(genome);
-    add_gene(new, from, to, random_weight());
+    add_gene(new, in_node->id, out_node->id, random_weight());
     return new;
 }
 
 struct Genome* child_add_node(struct Genome *genome) {
     uint32_t id = (rand() % (genome->nodes->size - genome->input_nodes - 1)) +
         genome->input_nodes + 1;
-    struct Node *node = find_node(genome, id);
+    struct Node *node = get_item(genome->nodes, id)->data;
     struct Gene *gene = get_item(node->in_genes, rand() % node->in_genes->size)->data;
     struct Genome *new = copy_genome(genome);
     evolve_gene(new, gene->from, gene->to);

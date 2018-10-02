@@ -4,8 +4,9 @@
 #include "net.h"
 #include "helper.h"
 #define DEBUG 0
-#define GENOME_COUNT 50
+#define INIT_COUNT 50
 #define SPECIES_CLEAN_COUNT 10
+#define GENOME_MAX_COUNT 200
 
 struct Species* new_species(struct Genome *genome) {
     struct Species *species = calloc(1, sizeof(struct Species));
@@ -58,7 +59,7 @@ void add_genome(struct Net *net, struct Genome *genome) {
 }
 
 void populate(struct Net *net, struct Genome *genome) {
-    for (int i = 0; i < GENOME_COUNT - 1; i++) {
+    for (int i = 0; i < INIT_COUNT - 1; i++) {
         struct Genome *new_genome = copy_genome(genome);
         evolve_genes_weights(new_genome);
         add_genome(net, new_genome);
@@ -122,4 +123,42 @@ void clean_species(struct Species *species, uint32_t left) {
         walk = walk->next;
         free(tmp);
     }
+}
+
+struct Genome* random_genome(struct Species *species) {
+    return get_item(species->genomes, rand() % species->genomes->size)->data;
+}
+
+struct Genome* new_child(struct Species *species) {
+    double random = random_weight();
+    struct Genome *child = NULL;
+    if (random < 0.5) {
+        child = child_add_connection(random_genome(species));
+    } else if (random < 0.9) {
+        child = crossover(random_genome(species), random_genome(species));
+    } else {
+        child = child_add_node(random_genome(species));
+    }
+    return child;
+}
+
+void new_epoch(struct Net *net) {
+    static uint32_t epoch = 0;
+    struct ListItem *walk = net->species->head;
+    struct List *childs = new_list();
+    while (walk) {
+        struct Species *species = walk->data;
+        clean_species(species, SPECIES_CLEAN_COUNT);
+        for (int i = 0; i < (GENOME_MAX_COUNT / net->species->size); i++) {
+            add_data(childs, new_child(species));
+        }
+        clean_species(species, 1);
+        walk = walk->next;
+    }
+    struct ListItem *child_walk = childs->head;
+    while (child_walk) {
+        add_genome(net, child_walk->data);
+        child_walk = child_walk->next;
+    }
+    printf("epoch number: %d, species count: %d\n", epoch++, net->species->size);
 }
