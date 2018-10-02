@@ -4,19 +4,6 @@
 #include "net.h"
 #include "helper.h"
 
-int cmp(void *a, void* b) {
-    struct Genome *g1 = a;
-    struct Genome *g2 = b;
-
-    if (g1->fitness > g2->fitness) {
-        return 1;
-    } else if (g1->fitness == g2->fitness) {
-        return 0;
-    } else {
-        return -1;
-    }
-}
-
 int main(int argc, char **argv) {
     srand(time(0));
     if (argc < 3) {

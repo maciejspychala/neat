@@ -19,6 +19,19 @@ bool same_species(struct Species *species, struct Genome *genome) {
     return dist < 1.2;
 }
 
+int cmp_fitness(void *a, void* b) {
+    struct Genome *g1 = a;
+    struct Genome *g2 = b;
+
+    if (g1->fitness > g2->fitness) {
+        return 1;
+    } else if (g1->fitness == g2->fitness) {
+        return 0;
+    } else {
+        return -1;
+    }
+}
+
 struct Net* new_net() {
     struct Net *net = calloc(1, sizeof(struct Net));
     net->species = new_list();
