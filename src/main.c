@@ -28,5 +28,14 @@ int main(int argc, char **argv) {
         printf("%f\n", g->fitness);
         walk = walk->next;
     }
+    printf("\n\n\n");
+    clean_species(s, 5);
+    test_net(net, lines, inputs, outputs, train_x, train_y);
+    walk = s->genomes->head;
+    while (walk) {
+        struct Genome *g = walk->data;
+        printf("%f\n", g->fitness);
+        walk = walk->next;
+    }
     return 0;
 }

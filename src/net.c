@@ -4,7 +4,8 @@
 #include "net.h"
 #include "helper.h"
 #define DEBUG 0
-#define GENOME_COUNT 20
+#define GENOME_COUNT 50
+#define SPECIES_CLEAN_COUNT 10
 
 struct Species* new_species(struct Genome *genome) {
     struct Species *species = calloc(1, sizeof(struct Species));

@@ -14,6 +14,8 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
     struct Genome *genome = calloc(1, sizeof(struct Genome));
     genome->nodes = new_list();
     genome->global_genes = global_genes;
+    genome->input_nodes = input_nodes;
+    genome->output_nodes = output_nodes;
 
     for (uint32_t i = 0; i < input_nodes; i++) {
         add_data(genome->nodes, new_node(new_list(), IN));
@@ -180,6 +182,8 @@ void add_gene(struct Genome *genome, uint32_t in, uint32_t out, double weight) {
 struct Genome* copy_genome(struct Genome *genome) {
     struct Genome *new = calloc(1, sizeof(struct Genome));
     new->global_genes = genome->global_genes;
+    new->input_nodes = genome->input_nodes;
+    new->output_nodes = genome->output_nodes;
     new->nodes = new_list();
     struct ListItem *walk = genome->nodes->head;
     while (walk) {
@@ -198,6 +202,8 @@ struct Genome* crossover(struct Genome *better, struct Genome *worse) {
     struct Genome *new = calloc(1, sizeof(struct Genome));
     new->nodes = new_list();
     new->global_genes = better->global_genes;
+    new->input_nodes = better->input_nodes;
+    new->output_nodes = better->output_nodes;
 
     if (better->fitness < worse->fitness) {
         struct Genome *tmp = worse;
@@ -295,4 +301,27 @@ void destroy_genome(struct Genome *genome) {
     }
     free(genome);
     genome = NULL;
+}
+
+struct Genome* child_add_connection(struct Genome *genome) {
+    uint32_t from = rand() % genome->nodes->size;
+    uint32_t to = (rand() % (genome->nodes->size - genome->input_nodes - 1)) +
+        genome->input_nodes + 1;
+    struct Node *out_node = find_node(genome, to);
+    while (out_node->type == IN || out_node->type == BIAS) {
+        to++;
+    }
+    struct Genome *new = copy_genome(genome);
+    add_gene(new, from, to, random_weight());
+    return new;
+}
+
+struct Genome* child_add_node(struct Genome *genome) {
+    uint32_t id = (rand() % (genome->nodes->size - genome->input_nodes - 1)) +
+        genome->input_nodes + 1;
+    struct Node *node = find_node(genome, id);
+    struct Gene *gene = get_item(node->in_genes, rand() % node->in_genes->size)->data;
+    struct Genome *new = copy_genome(genome);
+    evolve_gene(new, gene->from, gene->to);
+    return new;
 }
