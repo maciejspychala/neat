@@ -22,5 +22,5 @@ double random_weight() {
 }
 
 void evolve_weight(struct Gene *gene) {
-    gene->weight = random_weight();
+    gene->weight *= (random_weight() / 10) + 1.0;
 }

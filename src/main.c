@@ -19,7 +19,7 @@ int main(int argc, char **argv) {
     struct Net *net = new_net();
     populate(net, new_genome(inputs, outputs));
 
-    for (int i = 0; i < 200; i++) {
+    for (int i = 0; i < 50; i++) {
         test_net(net, lines, inputs, outputs, train_x, train_y);
         new_epoch(net);
     }

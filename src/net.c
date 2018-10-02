@@ -67,23 +67,33 @@ void populate(struct Net *net, struct Genome *genome) {
     add_genome(net, genome);
 }
 
-void test_species(struct Species *species, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
+double test_species(struct Species *species, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
     struct ListItem *walk = species->genomes->head;
+    double max = 0;
     while (walk) {
         struct Genome *genome = walk->data;
-        test_genome(genome, rows, inputs, outputs, x, y);
+        double score = test_genome(genome, rows, inputs, outputs, x, y);
+        if (score > max) {
+            max = score;
+        }
         walk = walk->next;
     }
+    return max;
 }
 
 void test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
     struct ListItem *walk = net->species->head;
+    double max = 0;
     while (walk) {
         struct Species *species = walk->data;
-        test_species(species, rows, inputs, outputs, x, y);
+        double score = test_species(species, rows, inputs, outputs, x, y);
+        if (score > max) {
+            max = score;
+        }
         sort_list(species->genomes, cmp_fitness);
         walk = walk->next;
     }
+    printf("max score: %f\n", max);
 }
 
 double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
@@ -132,9 +142,9 @@ struct Genome* random_genome(struct Species *species) {
 struct Genome* new_child(struct Species *species) {
     double random = random_weight();
     struct Genome *child = NULL;
-    if (random < 0.5) {
+    if (random < 0.33) {
         child = child_add_connection(random_genome(species));
-    } else if (random < 0.9) {
+    } else if (random < 0.66) {
         child = crossover(random_genome(species), random_genome(species));
     } else {
         child = child_add_node(random_genome(species));
@@ -157,8 +167,13 @@ void new_epoch(struct Net *net) {
     }
     struct ListItem *child_walk = childs->head;
     while (child_walk) {
-        add_genome(net, child_walk->data);
+        struct Genome *child = child_walk->data;
+        if (rand() % 5) {
+            evolve_genes_weights(child);
+        }
+        add_genome(net, child);
         child_walk = child_walk->next;
     }
     printf("epoch number: %d, species count: %d\n", epoch++, net->species->size);
+    print_genome(((struct Species*)net->species->head->data)->genomes->head->data);
 }
