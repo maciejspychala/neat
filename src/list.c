@@ -14,6 +14,16 @@ struct ListItem* new_item(void *data) {
     return item;
 }
 
+uint32_t list_size(struct List *list) {
+    uint32_t size = 0;
+    struct ListItem *walk = list->head;
+    while (walk) {
+        size++;
+        walk = walk->next;
+    }
+    return size;
+}
+
 void add_data(struct List *list, void *data) {
     struct ListItem *item = new_item(data);
     struct ListItem *walk = list->head;
@@ -25,25 +35,22 @@ void add_data(struct List *list, void *data) {
         }
         walk->next = item;
     }
-    list->size++;
 }
 
 void push_data(struct List *list, void *data) {
     struct ListItem *item = new_item(data);
     item->next = list->head;
     list->head = item;
-    list->size++;
 }
 
 void* pop_data(struct List *list) {
     struct ListItem* head = list->head;
     list->head = head->next;
-    list->size--;
     return head->data;
 }
 
-struct ListItem* get_item(struct List *list, int index) {
-    if (list->size < index) {
+struct ListItem* get_item(struct List *list, uint32_t index) {
+    if (list_size(list) < index) {
         return NULL;
     }
     struct ListItem *walk = list->head;

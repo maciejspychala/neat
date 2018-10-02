@@ -125,7 +125,6 @@ void clean_species(struct Species *species, uint32_t left) {
         struct ListItem *tmp = walk;
         walk = walk->next;
         tmp->next = NULL;
-        species->genomes->size = left;
     }
     while (walk) {
         destroy_genome(walk->data);
@@ -136,7 +135,7 @@ void clean_species(struct Species *species, uint32_t left) {
 }
 
 struct Genome* random_genome(struct Species *species) {
-    return get_item(species->genomes, rand() % species->genomes->size)->data;
+    return get_item(species->genomes, rand() % list_size(species->genomes))->data;
 }
 
 struct Genome* new_child(struct Species *species) {
@@ -159,7 +158,7 @@ void new_epoch(struct Net *net) {
     while (walk) {
         struct Species *species = walk->data;
         clean_species(species, SPECIES_CLEAN_COUNT);
-        for (int i = 0; i < (GENOME_MAX_COUNT / net->species->size); i++) {
+        for (uint32_t i = 0; i < (GENOME_MAX_COUNT / list_size(net->species)); i++) {
             add_data(childs, new_child(species));
         }
         clean_species(species, 1);
@@ -174,6 +173,6 @@ void new_epoch(struct Net *net) {
         add_genome(net, child);
         child_walk = child_walk->next;
     }
-    printf("epoch number: %d, species count: %d\n", epoch++, net->species->size);
+    printf("epoch number: %d, species count: %d\n", epoch++, list_size(net->species));
     print_genome(((struct Species*)net->species->head->data)->genomes->head->data);
 }

@@ -256,7 +256,7 @@ double* collect_output(struct Genome *genome, uint32_t outputs) {
 }
 
 double distance(struct Genome *g1, struct Genome *g2) {
-    if (g1->nodes->size < g2->nodes->size) {
+    if (list_size(g1->nodes) < list_size(g2->nodes)) {
         struct Genome *tmp = g2;
         g2 = g1;
         g1 = tmp;
@@ -286,7 +286,7 @@ double distance(struct Genome *g1, struct Genome *g2) {
         walk = walk->next;
     }
 
-    return (disjonts / g1->nodes->size) + (0.4 * weight_dif / matching_genes);
+    return (disjonts / list_size(g1->nodes)) + (0.4 * weight_dif / matching_genes);
 }
 
 void destroy_genome(struct Genome *genome) {
@@ -304,8 +304,8 @@ void destroy_genome(struct Genome *genome) {
 }
 
 struct Genome* child_add_connection(struct Genome *genome) {
-    uint32_t from = rand() % genome->nodes->size;
-    uint32_t to = (rand() % (genome->nodes->size - genome->input_nodes - 1)) +
+    uint32_t from = rand() % list_size(genome->nodes);
+    uint32_t to = (rand() % (list_size(genome->nodes) - genome->input_nodes - 1)) +
         genome->input_nodes + 1;
     struct Node *in_node = get_item(genome->nodes, from)->data;
     struct Node *out_node = get_item(genome->nodes, to)->data;
@@ -315,10 +315,10 @@ struct Genome* child_add_connection(struct Genome *genome) {
 }
 
 struct Genome* child_add_node(struct Genome *genome) {
-    uint32_t id = (rand() % (genome->nodes->size - genome->input_nodes - 1)) +
+    uint32_t id = (rand() % (list_size(genome->nodes) - genome->input_nodes - 1)) +
         genome->input_nodes + 1;
     struct Node *node = get_item(genome->nodes, id)->data;
-    struct Gene *gene = get_item(node->in_genes, rand() % node->in_genes->size)->data;
+    struct Gene *gene = get_item(node->in_genes, rand() % list_size(node->in_genes))->data;
     struct Genome *new = copy_genome(genome);
     evolve_gene(new, gene->from, gene->to);
     return new;
