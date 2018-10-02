@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include "list.h"
 
@@ -52,7 +53,7 @@ struct ListItem* get_data(struct List *list, int index) {
     return walk->data;
 }
 
-void* fold(struct List *list, void* (*compare)(void *a, void *b)) {
+void* fold(struct List *list, int (*compare)(void *a, void *b)) {
     if (!list->head) {
         return NULL;
     }
@@ -60,7 +61,9 @@ void* fold(struct List *list, void* (*compare)(void *a, void *b)) {
     struct ListItem *walk = list->head;
     while (walk) {
         void *tmp = walk->data;
-        chosen = compare(chosen, tmp);
+        if (compare(chosen, tmp) < 1) {
+            chosen = tmp;
+        }
         walk = walk->next;
     }
     return chosen;
@@ -76,4 +79,24 @@ struct List* copy_list(struct List *list, size_t struct_size) {
         walk = walk->next;
     }
     return new;
+}
+
+void sort_list(struct List *list, int (*compare)(void *a, void *b)) {
+    if (!list->head) {
+        return;
+    }
+    bool touched = false;
+    do {
+        touched = false;
+        struct ListItem *walk = list->head;
+        while (walk->next) {
+            if (compare(walk->data, walk->next->data) < 0) {
+                void *tmp = walk->data;
+                walk->data = walk->next->data;
+                walk->next->data = tmp;
+                touched = true;
+            }
+            walk = walk->next;
+        }
+    } while (touched);
 }

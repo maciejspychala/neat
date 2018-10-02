@@ -4,14 +4,17 @@
 #include "net.h"
 #include "helper.h"
 
-void* cmp(void *a, void* b) {
+int cmp(void *a, void* b) {
     struct Genome *g1 = a;
     struct Genome *g2 = b;
 
-    if (g1->fitness < g2->fitness) {
-        return g2;
+    if (g1->fitness > g2->fitness) {
+        return 1;
+    } else if (g1->fitness == g2->fitness) {
+        return 0;
+    } else {
+        return -1;
     }
-    return g1;
 }
 
 int main(int argc, char **argv) {
