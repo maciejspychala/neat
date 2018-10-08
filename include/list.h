@@ -24,5 +24,6 @@ struct List* copy_list(struct List *list, size_t struct_size);
 void destroy_list(struct List *list);
 void* fold(struct List *list, int (*compare)(void *a, void *b));
 void sort_list(struct List *list, int (*compare)(void *a, void *b));
+void iterate_list(struct List *list, void (*func)(void *data));
 
 #endif

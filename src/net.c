@@ -41,17 +41,17 @@ struct Net* new_net() {
 }
 
 void add_genome(struct Net *net, struct Genome *genome) {
-    struct ListItem *walk = net->species->head;
     bool added = false;
-    while (walk) {
-        struct Species *species = walk->data;
-        if (same_species(species, genome)) {
+
+    void try_to_add(void *species_data) {
+        struct Species *species = species_data;
+        if (same_species(species, genome) && !added) {
             add_data(species->genomes, genome);
             added = true;
-            break;
         }
-        walk = walk->next;
     }
+    iterate_list(net->species, try_to_add);
+
     if (!added) {
         struct Species *species = new_species(genome);
         add_data(net->species, species);
@@ -68,31 +68,30 @@ void populate(struct Net *net, struct Genome *genome) {
 }
 
 double test_species(struct Species *species, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
-    struct ListItem *walk = species->genomes->head;
     double max = 0;
-    while (walk) {
-        struct Genome *genome = walk->data;
+    void run_test_on_genome(void *genome_data) {
+        struct Genome *genome = genome_data;
         double score = test_genome(genome, rows, inputs, outputs, x, y);
         if (score > max) {
             max = score;
         }
-        walk = walk->next;
+        print_genome(genome);
     }
+    iterate_list(species->genomes, run_test_on_genome);
     return max;
 }
 
 void test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
-    struct ListItem *walk = net->species->head;
     double max = 0;
-    while (walk) {
-        struct Species *species = walk->data;
+    void run_test_on_species(void *species_data) {
+        struct Species *species = species_data;
         double score = test_species(species, rows, inputs, outputs, x, y);
         if (score > max) {
             max = score;
         }
         sort_list(species->genomes, cmp_fitness);
-        walk = walk->next;
     }
+    iterate_list(net->species, run_test_on_species);
     printf("max score: %f\n", max);
 }
 
@@ -153,26 +152,26 @@ struct Genome* new_child(struct Species *species) {
 
 void new_epoch(struct Net *net) {
     static uint32_t epoch = 0;
-    struct ListItem *walk = net->species->head;
+
     struct List *childs = new_list();
-    while (walk) {
-        struct Species *species = walk->data;
+    void new_epoch_for_species(void *species_data) {
+        struct Species *species = species_data;
         clean_species(species, SPECIES_CLEAN_COUNT);
         for (uint32_t i = 0; i < (GENOME_MAX_COUNT / list_size(net->species)); i++) {
             add_data(childs, new_child(species));
         }
         clean_species(species, 1);
-        walk = walk->next;
     }
-    struct ListItem *child_walk = childs->head;
-    while (child_walk) {
-        struct Genome *child = child_walk->data;
+    iterate_list(net->species, new_epoch_for_species);
+
+    void add_child(void *data) {
+        struct Genome *child = data;
         if (rand() % 5) {
             evolve_genes_weights(child);
         }
         add_genome(net, child);
-        child_walk = child_walk->next;
     }
-    printf("epoch number: %d, species count: %d\n", epoch++, list_size(net->species));
-    print_genome(((struct Species*)net->species->head->data)->genomes->head->data);
+    iterate_list(childs, add_child);
+
+    printf("epoch: %d, species: %d ", epoch++, list_size(net->species));
 }

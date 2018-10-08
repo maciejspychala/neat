@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "list.h"
+#include "genome.h"
 
 enum node_type {
     IN,
@@ -24,5 +25,6 @@ struct Node* new_node_with_id(uint32_t id);
 uint32_t node_number();
 void print_node(struct Node *node);
 struct Gene* find_gene(struct Node *node, uint32_t in_id);
+void calculate_node(struct Genome *genome, struct Node *node);
 
 #endif

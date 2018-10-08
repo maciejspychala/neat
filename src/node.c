@@ -28,20 +28,15 @@ uint32_t node_number() {
 
 void print_node(struct Node *node) {
     printf("Node %d, value: %f, inputs:", node->id, node->value);
-    if (node->in_genes) {
-        struct ListItem *walk = node->in_genes->head;
-        while (walk) {
-            struct Gene *gene = walk->data;
-            printf(" %d", gene->from);
-            if (!gene->enabled) {
-                printf("-");
-            }
-            printf("(%.5f)", gene->weight);
-            walk = walk->next;
+    void print_gene(void* gene_data) {
+        struct Gene *gene = gene_data;
+        printf(" %d", gene->from);
+        if (!gene->enabled) {
+            printf("-");
         }
-    } else {
-        printf(" NULL");
+        printf("(%.5f)", gene->weight);
     }
+    iterate_list(node->in_genes, print_gene);
     printf("\n");
 }
 
@@ -54,4 +49,18 @@ struct Gene* find_gene(struct Node *node, uint32_t from_id) {
         walk = walk->next;
     }
     return NULL;
+}
+
+void calculate_node(struct Genome *genome, struct Node *node) {
+    double value = 0.0;
+
+    void add_gene_signal_to_value(void *gene_data) {
+        struct Gene *gene = gene_data;
+        if (gene->enabled) {
+            value += gene->weight * find_node(genome, gene->from)->value;
+        }
+    }
+    iterate_list(node->in_genes, add_gene_signal_to_value);
+
+    node->value = sigmoid(value);
 }

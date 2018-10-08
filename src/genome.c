@@ -25,15 +25,13 @@ struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
 
     for (uint32_t i = 0; i < output_nodes; i++) {
         struct Node *out = new_node(new_list(), OUT);
-
-        struct ListItem *walk = genome->nodes->head;
-        while (walk) {
-            struct Node *node = walk->data;
+        void create_gene(void *data) {
+            struct Node *node = data;
             if (node->type == IN || node->type == BIAS) {
                 add_data(out->in_genes, new_gene(genome, node->id, out->id, random_weight()));
             }
-            walk = walk->next;
         }
+        iterate_list(genome->nodes, create_gene);
         add_data(genome->nodes, out);
     }
     return genome;
@@ -44,13 +42,11 @@ double sigmoid(double x) {
 }
 
 void calculate_output(struct Genome *genome, double *input) {
-    struct ListItem *walk = genome->nodes->head;
     struct List *progress = new_list();
-    while (walk) {
-        struct Node *node = walk->data;
+
+    void init_values(void *node_data) {
+        struct Node *node = node_data;
         node->visited = false;
-        // to keep recurent connection working
-        // node->value = 0.0;
         if (node->type == IN) {
             node->value = input[node->id - 1];
             node->visited = true;
@@ -60,36 +56,25 @@ void calculate_output(struct Genome *genome, double *input) {
         } else if (node->type == OUT) {
             push_data(progress, node);
         }
-        walk = walk->next;
     }
-
+    iterate_list(genome->nodes, init_values);
 
     while (progress->head) {
         struct Node *node = progress->head->data;
 
         if (node->visited) {
-            double value = 0.0;
-            struct ListItem *walk = node->in_genes->head;
-            while (walk) {
-                struct Gene *gene = walk->data;
-                if (gene->enabled) {
-                    value += gene->weight * find_node(genome, gene->from)->value;
-                }
-                walk = walk->next;
-            }
-            node->value = sigmoid(value);
+            calculate_node(genome, node);
             pop_data(progress);
         } else {
             node->visited = true;
-            struct ListItem *walk = node->in_genes->head;
-            while (walk) {
-                struct Gene *gene = walk->data;
+            void add_unvisited_nodes(void *gene_data) {
+                struct Gene *gene = gene_data;
                 struct Node *in_node = find_node(genome, gene->from);
                 if (!in_node->visited) {
                     push_data(progress, in_node);
                 }
-                walk = walk->next;
             }
+            iterate_list(node->in_genes, add_unvisited_nodes);
         }
     }
 }
@@ -126,26 +111,28 @@ void evolve_gene(struct Genome *genome, uint32_t in_id, uint32_t out_id) {
 }
 
 void evolve_genes_weights(struct Genome *genome) {
-    struct ListItem *walk = genome->nodes->head;
-    while (walk) {
-        struct Node *node = walk->data;
-        if (node->type != IN) {
-            struct ListItem *gene_walk = node->in_genes->head;
-            while (gene_walk) {
-                evolve_weight(gene_walk->data);
-                gene_walk = gene_walk->next;
-            }
-        }
-        walk = walk->next;
+
+    void evolve_gene_weight(void* gene_data) {
+        struct Gene *gene = gene_data;
+        evolve_weight(gene);
     }
+
+    void evolve_node_genes_weights(void *node_data) {
+        struct Node *node = node_data;
+        if (node->type != IN) {
+            iterate_list(node->in_genes, evolve_gene_weight);
+        }
+    }
+
+    iterate_list(genome->nodes, evolve_node_genes_weights);
 }
 
 void print_genome(struct Genome *genome) {
-    struct ListItem *node = genome->nodes->head;
-    while (node) {
-        print_node((struct Node*) node->data);
-        node = node->next;
+    void print(void *node_data) {
+        struct Node *node = node_data;
+        print_node(node);
     }
+    iterate_list(genome->nodes, print);
 }
 
 struct Gene* global_gene_exists(struct Genome *genome, uint32_t in, uint32_t out) {
@@ -185,16 +172,17 @@ struct Genome* copy_genome(struct Genome *genome) {
     new->input_nodes = genome->input_nodes;
     new->output_nodes = genome->output_nodes;
     new->nodes = new_list();
-    struct ListItem *walk = genome->nodes->head;
-    while (walk) {
-        struct Node *node = walk->data;
+
+    void copy_node(void *node_data) {
+        struct Node *node = node_data;
         struct Node *new_node = calloc(1, sizeof(struct Node));
         new_node->id = node->id;
         new_node->type = node->type;
         new_node->in_genes = copy_list(node->in_genes, sizeof(struct Gene));
         add_data(new->nodes, new_node);
-        walk = walk->next;
     }
+    iterate_list(genome->nodes, copy_node);
+
     return new;
 }
 
@@ -219,9 +207,8 @@ struct Genome* crossover(struct Genome *better, struct Genome *worse) {
         struct Node *new_node = new_node_with_id(better_node->id);
         new_node->type = better_node->type;
 
-        struct ListItem *gene_walk = better_node->in_genes->head;
-        while (gene_walk) {
-            struct Gene *better_gene = gene_walk->data;
+        void inherit_gene(void *gene_data) {
+            struct Gene *better_gene = gene_data;
             struct Gene *worse_gene = worse_node ? find_gene(worse_node, better_gene->from) : NULL;
             struct Gene *new_gene = calloc(1, sizeof(struct Gene));
 
@@ -231,8 +218,9 @@ struct Genome* crossover(struct Genome *better, struct Genome *worse) {
                 *new_gene = *better_gene;
             }
             add_data(new_node->in_genes, new_gene);
-            gene_walk = gene_walk->next;
         }
+        iterate_list(better_node->in_genes, inherit_gene);
+
         add_data(new->nodes, new_node);
         walk = walk->next;
     }
@@ -241,17 +229,16 @@ struct Genome* crossover(struct Genome *better, struct Genome *worse) {
 }
 
 double* collect_output(struct Genome *genome, uint32_t outputs) {
-    struct ListItem *walk = genome->nodes->head;
     double *out = calloc(outputs, sizeof(double));
-    int collected = 0;
-    while (walk) {
-        struct Node *node = walk->data;
+    uint32_t collected = 0;
+    void get_output(void *node_data) {
+        struct Node *node = node_data;
         if (node->type == OUT) {
             out[collected] = node->value;
             collected++;
         }
-        walk = walk->next;
     }
+    iterate_list(genome->nodes, get_output);
     return out;
 }
 
@@ -270,9 +257,8 @@ double distance(struct Genome *g1, struct Genome *g2) {
         struct Node *n1 = walk->data;
         struct Node *n2 = find_node(g2, n1->id);
 
-        struct ListItem *gene_walk = n1->in_genes->head;
-        while (gene_walk) {
-            struct Gene *g1 = gene_walk->data;
+        void gene_distance (void *gene_data) {
+            struct Gene *g1 = gene_data;
             struct Gene *g2 = n2 ? find_gene(n2, g1->from) : NULL;
 
             if (g2)  {
@@ -281,8 +267,9 @@ double distance(struct Genome *g1, struct Genome *g2) {
             } else {
                 disjonts++;
             }
-            gene_walk = gene_walk->next;
         }
+        iterate_list(n1->in_genes, gene_distance);
+
         walk = walk->next;
     }
 

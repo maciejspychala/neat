@@ -16,11 +16,11 @@ struct ListItem* new_item(void *data) {
 
 uint32_t list_size(struct List *list) {
     uint32_t size = 0;
-    struct ListItem *walk = list->head;
-    while (walk) {
+    void inc_size(void *data) {
+        (void)data;
         size++;
-        walk = walk->next;
     }
+    iterate_list(list, inc_size);
     return size;
 }
 
@@ -78,13 +78,12 @@ void* fold(struct List *list, int (*compare)(void *a, void *b)) {
 
 struct List* copy_list(struct List *list, size_t struct_size) {
     struct List *new = new_list();
-    struct ListItem *walk = list->head;
-    while (walk) {
-        void *data = calloc(1, struct_size);
-        memcpy(data, walk->data, struct_size);
-        add_data(new, data);
-        walk = walk->next;
+    void copy_data(void *data) {
+        void *new_data = calloc(1, struct_size);
+        memcpy(new_data, data, struct_size);
+        add_data(new, new_data);
     }
+    iterate_list(list, copy_data);
     return new;
 }
 
@@ -117,4 +116,12 @@ void destroy_list(struct List *list) {
         free(tmp);
     }
     list = NULL;
+}
+
+void iterate_list(struct List *list, void (*func)(void *data)) {
+    struct ListItem *walk = list->head;
+    while (walk) {
+        func(walk->data);
+        walk = walk->next;
+    }
 }
