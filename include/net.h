@@ -23,5 +23,6 @@ void test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs,
 double test_genome(struct Genome* genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y);
 void clean_species(struct Species *species, uint32_t left);
 void new_epoch(struct Net *net);
+double random_zero_to_one();
 
 #endif

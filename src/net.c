@@ -138,7 +138,7 @@ struct Genome* random_genome(struct Species *species) {
 }
 
 struct Genome* new_child(struct Species *species) {
-    double random = random_weight();
+    double random = random_zero_to_one();
     struct Genome *child = NULL;
     if (random < 0.33) {
         child = child_add_connection(random_genome(species));
@@ -174,4 +174,8 @@ void new_epoch(struct Net *net) {
     iterate_list(childs, add_child);
 
     printf("epoch: %d, species: %d ", epoch++, list_size(net->species));
+}
+
+double random_zero_to_one() {
+    return rand() / (double) RAND_MAX;
 }
