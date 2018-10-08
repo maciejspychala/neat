@@ -75,24 +75,24 @@ double test_species(struct Species *species, uint32_t rows, uint32_t inputs, uin
         if (score > max) {
             max = score;
         }
-        print_genome(genome);
     }
     iterate_list(species->genomes, run_test_on_genome);
     return max;
 }
 
-void test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
-    double max = 0;
+struct Genome* test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
+    struct Genome *max = 0;
     void run_test_on_species(void *species_data) {
         struct Species *species = species_data;
-        double score = test_species(species, rows, inputs, outputs, x, y);
-        if (score > max) {
-            max = score;
-        }
+        test_species(species, rows, inputs, outputs, x, y);
         sort_list(species->genomes, cmp_fitness);
+        struct Genome *genome = species->genomes->head->data;
+        if(!max || genome->fitness > max->fitness) {
+            max = genome;
+        }
     }
     iterate_list(net->species, run_test_on_species);
-    printf("max score: %f\n", max);
+    return max;
 }
 
 double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {

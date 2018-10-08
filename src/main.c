@@ -20,7 +20,8 @@ int main(int argc, char **argv) {
     populate(net, new_genome(inputs, outputs));
 
     for (int i = 0; i < 50; i++) {
-        test_net(net, lines, inputs, outputs, train_x, train_y);
+        struct Genome *best = test_net(net, lines, inputs, outputs, train_x, train_y);
+        print_genome(best);
         new_epoch(net);
     }
     return 0;

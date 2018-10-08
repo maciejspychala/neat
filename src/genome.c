@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <math.h>
 #include "gene.h"
@@ -133,6 +134,7 @@ void print_genome(struct Genome *genome) {
         print_node(node);
     }
     iterate_list(genome->nodes, print);
+    printf("score: %f\n", genome->fitness);
 }
 
 struct Gene* global_gene_exists(struct Genome *genome, uint32_t in, uint32_t out) {
