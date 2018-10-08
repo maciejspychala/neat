@@ -140,9 +140,9 @@ struct Genome* random_genome(struct Species *species) {
 struct Genome* new_child(struct Species *species) {
     double random = random_zero_to_one();
     struct Genome *child = NULL;
-    if (random < 0.33) {
+    if (random < 0.45) {
         child = child_add_connection(random_genome(species));
-    } else if (random < 0.66) {
+    } else if (random < 0.90) {
         child = crossover(random_genome(species), random_genome(species));
     } else {
         child = child_add_node(random_genome(species));
