@@ -115,7 +115,9 @@ void evolve_genes_weights(struct Genome *genome) {
 
     void evolve_gene_weight(void* gene_data) {
         struct Gene *gene = gene_data;
-        evolve_weight(gene);
+        if (rand() % 5 == 0) {
+            evolve_weight(gene);
+        }
     }
 
     void evolve_node_genes_weights(void *node_data) {

@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     struct Net *net = new_net();
     populate(net, new_genome(inputs, outputs));
     struct Genome *best = NULL;
-    for (int i = 0; i < 500; i++) {
+    for (int i = 0; i < 100; i++) {
         best = test_net(net, lines, inputs, outputs, train_x, train_y);
         printf("%f\n", best->fitness);
         if (i % 20 == 0) {
