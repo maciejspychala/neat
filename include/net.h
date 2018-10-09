@@ -6,6 +6,14 @@
 #include "genome.h"
 #include "node.h"
 
+#define DEBUG 0
+#define GENOME_MAX_COUNT 150
+#define DISTANCE_WEIGHTS 0.4
+#define DISTANCE_TRESHOLD 3.0
+#define MUTATE_WEIGHT 0.8
+#define WEIGHT_PERTRUB 0.9
+#define WEIGHT_PERTRUB_MAX 0.1
+
 struct Species {
     struct List *genomes;
 };

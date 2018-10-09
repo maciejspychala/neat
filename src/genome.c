@@ -5,6 +5,7 @@
 #include "gene.h"
 #include "genome.h"
 #include "node.h"
+#include "net.h"
 
 struct Genome* new_genome(uint32_t input_nodes, uint32_t output_nodes) {
     static struct List *global_genes = NULL;
@@ -115,7 +116,7 @@ void evolve_genes_weights(struct Genome *genome) {
 
     void evolve_gene_weight(void* gene_data) {
         struct Gene *gene = gene_data;
-        if (rand() % 5 == 0) {
+        if (random_zero_to_one() < MUTATE_WEIGHT) {
             evolve_weight(gene);
         }
     }
@@ -277,7 +278,7 @@ double distance(struct Genome *g1, struct Genome *g2) {
         walk = walk->next;
     }
 
-    return (disjonts / list_size(g1->nodes)) + (0.4 * weight_dif / matching_genes);
+    return (disjonts / list_size(g1->nodes)) + (DISTANCE_WEIGHTS * weight_dif / matching_genes);
 }
 
 void destroy_genome(struct Genome *genome) {

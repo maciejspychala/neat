@@ -23,5 +23,10 @@ double random_weight() {
 }
 
 void evolve_weight(struct Gene *gene) {
-    gene->weight *= (random_zero_to_one() / 10) + 1.0;
+    if (random_zero_to_one() < WEIGHT_PERTRUB) {
+        double mult = random_zero_to_one() * (2 * WEIGHT_PERTRUB_MAX) + 1 - WEIGHT_PERTRUB_MAX;
+        gene->weight *= mult;
+    } else {
+        gene->weight = random_weight();
+    }
 }

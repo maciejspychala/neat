@@ -3,9 +3,6 @@
 #include <stdlib.h>
 #include "net.h"
 #include "helper.h"
-#define DEBUG 0
-#define INIT_COUNT 50
-#define GENOME_MAX_COUNT 200
 
 struct Species* new_species(struct Genome *genome) {
     struct Species *species = calloc(1, sizeof(struct Species));
@@ -17,7 +14,7 @@ struct Species* new_species(struct Genome *genome) {
 bool same_species(struct Species *species, struct Genome *genome) {
     struct Genome *leader = species->genomes->head->data;
     double dist = distance(leader, genome);
-    return dist < 1.0;
+    return dist < DISTANCE_TRESHOLD;
 }
 
 int cmp_fitness(void *a, void* b) {
@@ -58,7 +55,7 @@ void add_genome(struct Net *net, struct Genome *genome) {
 }
 
 void populate(struct Net *net, struct Genome *genome) {
-    for (int i = 0; i < INIT_COUNT - 1; i++) {
+    for (int i = 0; i < GENOME_MAX_COUNT - 1; i++) {
         struct Genome *new_genome = copy_genome(genome);
         evolve_genes_weights(new_genome);
         add_genome(net, new_genome);
@@ -96,7 +93,7 @@ struct Genome* test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_
 
 double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
     double score = 0;
-    for (uint32_t turn = 0; turn < rows * 10; turn++) {
+    for (uint32_t turn = 0; turn < rows * 20; turn++) {
         uint32_t i = rand() % rows;
         calculate_output(genome, x[i]);
         double *out = collect_output(genome, outputs);
