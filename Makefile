@@ -30,4 +30,4 @@ clean:
 	rm neat
 
 run:
-	./neat ./test/xor.in ./test/xor.out ./test/xor.test ./test/xor.test_out
+	./neat ./test/xor.in ./test/xor.out ./test/xor.test

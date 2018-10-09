@@ -63,11 +63,11 @@ void populate(struct Net *net, struct Genome *genome) {
     add_genome(net, genome);
 }
 
-double test_species(struct Species *species, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
+double test_species(struct Species *species, uint32_t rows, uint32_t outputs, double **x, double **y) {
     double max = 0;
     void run_test_on_genome(void *genome_data) {
         struct Genome *genome = genome_data;
-        double score = test_genome(genome, rows, inputs, outputs, x, y);
+        double score = test_genome(genome, rows, outputs, x, y);
         if (score > max) {
             max = score;
         }
@@ -76,11 +76,11 @@ double test_species(struct Species *species, uint32_t rows, uint32_t inputs, uin
     return max;
 }
 
-struct Genome* test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
+struct Genome* test_net(struct Net *net, uint32_t rows, uint32_t outputs, double **x, double **y) {
     struct Genome *max = 0;
     void run_test_on_species(void *species_data) {
         struct Species *species = species_data;
-        test_species(species, rows, inputs, outputs, x, y);
+        test_species(species, rows, outputs, x, y);
         sort_list(species->genomes, cmp_fitness);
         struct Genome *genome = species->genomes->head->data;
         if(!max || genome->fitness > max->fitness) {
@@ -91,21 +91,22 @@ struct Genome* test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_
     return max;
 }
 
-double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
+void predict(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x) {
+    for (uint32_t i = 0; i < rows; i++) {
+        calculate_output(genome, x[i]);
+        double *out = collect_output(genome, outputs);
+        print_double_arr(x[i], inputs);
+        printf(" ");
+        print_double_arr(out, outputs);
+        printf("\n");
+    }
+}
+double test_genome(struct Genome *genome, uint32_t rows, uint32_t outputs, double **x, double **y) {
     double score = 0;
-    for (uint32_t turn = 0; turn < rows * 20; turn++) {
+    for (uint32_t turn = 0; turn < rows * 10; turn++) {
         uint32_t i = rand() % rows;
         calculate_output(genome, x[i]);
         double *out = collect_output(genome, outputs);
-        if (DEBUG) {
-            printf("for (");
-            print_double_arr(x[i], inputs);
-            printf(") received (");
-            print_double_arr(out, outputs);
-            printf(") should be (");
-            print_double_arr(y[i], outputs);
-            printf(")\n");
-        }
         for (uint32_t j = 0; j < outputs; j++) {
             score += (out[j] - y[i][j]) * (out[j] - y[i][j]);
         }
@@ -148,8 +149,6 @@ struct Genome* new_child(struct Species *species) {
 }
 
 void new_epoch(struct Net *net) {
-    static uint32_t epoch = 0;
-
     struct List *childs = new_list();
     void new_epoch_for_species(void *species_data) {
         struct Species *species = species_data;
@@ -157,7 +156,7 @@ void new_epoch(struct Net *net) {
         for (uint32_t i = 0; i < (GENOME_MAX_COUNT / list_size(net->species)); i++) {
             add_data(childs, new_child(species));
         }
-        clean_species(species, 0);
+        clean_species(species, 1);
     }
     iterate_list(net->species, new_epoch_for_species);
 
@@ -165,8 +164,6 @@ void new_epoch(struct Net *net) {
         add_genome(net, genome);
     }
     iterate_list(childs, add_child);
-
-    printf("epoch: %d, species: %d\n", epoch++, list_size(net->species));
 }
 
 double random_zero_to_one() {
