@@ -135,17 +135,14 @@ struct Genome* random_genome(struct Species *species) {
 }
 
 struct Genome* new_child(struct Species *species) {
-    double random = random_zero_to_one();
     struct Genome *child = NULL;
-    if (random < 0.32) {
+    if (random_zero_to_one() < NEW_CONNECTION) {
+        child = child_add_connection(random_genome(species));
+    } else if (random_zero_to_one() < NEW_NODE) {
+        child = child_add_node(random_genome(species));
+    } else {
         child = copy_genome(random_genome(species));
         evolve_genes_weights(child);
-    } else if (random < 0.64) {
-        child = child_add_connection(random_genome(species));
-    } else if (random < 0.96) {
-        child = crossover(random_genome(species), random_genome(species));
-    } else {
-        child = child_add_node(random_genome(species));
     }
     return child;
 }

@@ -115,6 +115,7 @@ void destroy_list(struct List *list) {
         walk = walk->next;
         free(tmp);
     }
+    free(list);
     list = NULL;
 }
 

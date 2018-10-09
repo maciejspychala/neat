@@ -9,10 +9,12 @@
 #define DEBUG 0
 #define GENOME_MAX_COUNT 150
 #define DISTANCE_WEIGHTS 0.4
-#define DISTANCE_TRESHOLD 3.0
+#define DISTANCE_TRESHOLD 1.0
 #define MUTATE_WEIGHT 0.8
 #define WEIGHT_PERTRUB 0.9
 #define WEIGHT_PERTRUB_MAX 0.1
+#define NEW_NODE 0.03
+#define NEW_CONNECTION 0.1
 
 struct Species {
     struct List *genomes;
