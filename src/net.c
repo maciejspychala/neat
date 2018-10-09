@@ -5,7 +5,6 @@
 #include "helper.h"
 #define DEBUG 0
 #define INIT_COUNT 50
-#define SPECIES_CLEAN_COUNT 10
 #define GENOME_MAX_COUNT 200
 
 struct Species* new_species(struct Genome *genome) {
@@ -97,7 +96,8 @@ struct Genome* test_net(struct Net *net, uint32_t rows, uint32_t inputs, uint32_
 
 double test_genome(struct Genome *genome, uint32_t rows, uint32_t inputs, uint32_t outputs, double **x, double **y) {
     double score = 0;
-    for (uint32_t i = 0; i < rows; i++) {
+    for (uint32_t turn = 0; turn < rows * 10; turn++) {
+        uint32_t i = rand() % rows;
         calculate_output(genome, x[i]);
         double *out = collect_output(genome, outputs);
         if (DEBUG) {
@@ -156,7 +156,7 @@ void new_epoch(struct Net *net) {
     struct List *childs = new_list();
     void new_epoch_for_species(void *species_data) {
         struct Species *species = species_data;
-        clean_species(species, SPECIES_CLEAN_COUNT);
+        clean_species(species, (list_size(species->genomes) / 2) + 1);
         for (uint32_t i = 0; i < (GENOME_MAX_COUNT / list_size(net->species)); i++) {
             add_data(childs, new_child(species));
         }
@@ -173,7 +173,7 @@ void new_epoch(struct Net *net) {
     }
     iterate_list(childs, add_child);
 
-    printf("epoch: %d, species: %d ", epoch++, list_size(net->species));
+    printf("epoch: %d, species: %d\n", epoch++, list_size(net->species));
 }
 
 double random_zero_to_one() {

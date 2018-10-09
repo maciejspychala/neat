@@ -30,11 +30,10 @@ void print_node(struct Node *node) {
     printf("Node %d, value: %f, inputs:", node->id, node->value);
     void print_gene(void* gene_data) {
         struct Gene *gene = gene_data;
-        printf(" %d", gene->from);
-        if (!gene->enabled) {
-            printf("-");
+        if (gene->enabled) {
+            printf(" %d", gene->from);
+            printf("(%.5f)", gene->weight);
         }
-        printf("(%.5f)", gene->weight);
     }
     iterate_list(node->in_genes, print_gene);
     printf("\n");
